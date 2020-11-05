@@ -10,7 +10,7 @@
 	<body>
 
 		<div class="container">
-			<form class="myForm">
+			<form class="a_MyForm">
 				<input type="hidden" name="action" value="registration">
 				<div class="form-group">
 					<label for="fname">First Name</label>
@@ -21,8 +21,8 @@
 					<input type="text" name="lname" class="form-control" placeholder="Enter lname" id="lname">
 				</div>
 				<div class="form-group">
-					<label for="username">Username</label>
-					<input type="text" name="username" class="form-control" placeholder="Enter username" id="username">
+					<label for="uname">Username</label>
+					<input type="text" name="uname" class="form-control" placeholder="Enter email" id="uname">
 				</div>
 				<div class="form-group">
 					<label for="password">Password:</label>
@@ -37,7 +37,7 @@
 					<input class="form-check-input" type="checkbox"> Remember me
 					</label>
 				</div>
-				<button type="submit" name="submit" class="btn btn-success">Submit</button>
+				<button type="submit" name="submit" class="btn btn-success"><span class="spinner-grow spinner-grow-sm"></span>Submit</button>
 			</form>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -49,19 +49,46 @@
 			$(document).ready(function(){
 				//alert('ok');
 			});
-			$('.myForm').submit(function(e){
+			$('.a_MyForm').submit(function(e){
 				e.preventDefault();
+				//Disable the submit button
+				let form = $(this);
+				form.find(':button [type="submit"]').prop('disabled',true);
 				//alert('ok');
 				
 				var d = $(this).serialize();
 				
 				$.ajax({
 					//property:value
-					url:'http://localhost/ajax_registration/registration.php',
-					data:d,
+					url:'http://localhost/ajax_registration/ajax.php',
+					data:d ,
 					//method
-					success:function(){
+					beforeSend:function(xhr){
+						$('.spinner-grow').show();
+					},
+					success:function(result,status,xhr){
+						console.log(result);
+						//convert Json string -> JSON object
 						
+						result = JSON.parse(result);
+						console.log(result);
+						alert(result.msg);
+						
+						if(result.status == 401){
+							
+						}
+						
+						if(result.status == 402){
+							alert(result.msg);
+						}
+						if(result.status == 200){
+							alert(result.msg);
+							form.find(':button [type="submit"]').prop('disabled',false);
+							$('.spinner-grow').hide();
+						}
+						
+						
+					
 					}
 			
 					
